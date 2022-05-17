@@ -1,0 +1,30 @@
+body {
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  position: relative;
+  width: 400px;
+  height: 400px;
+  border: 2px solid black;
+}
+
+.block-section {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  left: 0px;
+  top: 0px;
+  position: absolute;
+  background-color: red;
+  align-items: center;
+  justify-content: center;
+}
+
+.apple {
+  width: 20px;
+  height: 20px;
+  background-color: green;
+  position: absolute;
+}
