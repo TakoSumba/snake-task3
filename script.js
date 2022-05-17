@@ -5,14 +5,37 @@ window.onload = function () {
   apple.setAttribute("id", "apple");
   apple.classList.add("apple");
   container.appendChild(apple);
-  
+
+  var direction = 39;
   renderApple();
 
   block.style.top = 0 + "px";
   block.style.left = 0 + "px";
 
+  setInterval(() => {
+    move(direction);
+  }, 150);
+
   document.addEventListener("keydown", (e) => {
-    var direction = e.keyCode;
+    direction = e.keyCode;
+  });
+
+  
+
+  function randomIntFromInterval(min, max) {
+    // min and max included
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
+
+  function renderApple() {
+    const appleLeft = 20 * randomIntFromInterval(0, 19);
+    const appleTop = 20 * randomIntFromInterval(0, 19);
+
+    apple.style.top = appleTop + "px";
+    apple.style.left = appleLeft + "px";
+  }
+
+  function move(direction) {
     var top = block.offsetTop;
     var left = block.offsetLeft;
 
@@ -40,29 +63,11 @@ window.onload = function () {
     console.log("top");
     console.log("left", block.offsetLeft);
 
-    if(block.offsetLeft===apple.offsetLeft && block.offsetTop===apple.offsetTop){
+    if (
+      block.offsetLeft === apple.offsetLeft &&
+      block.offsetTop === apple.offsetTop
+    ) {
       renderApple();
     }
-  });
-
-//   setInterval(() => {
-    
-//   }, 3000);
-// };
-
-function randomIntFromInterval(min, max) {
-  // min and max included
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
-
-function renderApple(){
-  const appleLeft = 20 * randomIntFromInterval(0, 19);
-    const appleTop = 20 * randomIntFromInterval(0, 19);
-   
-    apple.style.top = appleTop + "px";
-    apple.style.left = appleLeft + "px";
-}
-
-
-}
+  }
+};
