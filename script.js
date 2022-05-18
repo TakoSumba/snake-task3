@@ -20,7 +20,20 @@ window.onload = function () {
   }, 150);
 
   document.addEventListener("keydown", (e) => {
-    direction = e.keyCode;
+    const newDirection=e.keyCode;
+    if(direction===37 && newDirection ===39){
+      return
+    }
+    if(direction===39 && newDirection===37){
+      return
+    }if(direction ===38 && newDirection===40){
+      return
+    }
+    if(direction ===40 && newDirection===38){
+      return
+    }
+
+    direction = newDirection;
   });
 
   function randomIntFromInterval(min, max) {
@@ -35,13 +48,13 @@ window.onload = function () {
     apple.style.top = appleTop + "px";
     apple.style.left = appleLeft + "px";
   }
-
-  function move(direction) {
+  
+  function move(dir) {
 
     var top = block.offsetTop;
     var left = block.offsetLeft;
 
-    switch (direction) {
+    switch (dir) {
       case 38:
         top -= 20;
         block.style.top = top + "px";
@@ -60,6 +73,7 @@ window.onload = function () {
         break;
     }
     if (left < 0 || left >= 400 || top < 0 || top >= 400) {
+      // alert('you lost')
     }
 
     if (
@@ -72,6 +86,12 @@ window.onload = function () {
       square.classList.add("new-segment");
       container.appendChild(square);
       snakeBody.unshift(square);
+    }
+    for(let i=0;i<snakeBody.length-1;i++){
+     
+      if(snakeBody[i].style.top===snakeBody[snakeBody.length-1].style.top && snakeBody[i].style.left===snakeBody[snakeBody.length-1].style.left){
+        ///////tamashi gavacherot
+      }
     }
   }
   function rerenderSnakeBody(){
