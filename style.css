@@ -18,8 +18,7 @@ body {
   top: 0px;
   position: absolute;
   background-color: red;
-  align-items: center;
-  justify-content: center;
+
 }
 
 .apple {
@@ -27,4 +26,15 @@ body {
   height: 20px;
   background-color: green;
   position: absolute;
+}
+
+.new-segment{
+  width: 20px;
+  height: 20px;
+  display: flex;
+  left: 0px;
+  top: 0px;
+  position: absolute;
+  background-color: red;
+  
 }

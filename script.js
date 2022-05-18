@@ -1,12 +1,14 @@
 window.onload = function () {
+  var snakeBody = [];
   var block = document.getElementById("block");
+  snakeBody.unshift(block);
   var container = document.getElementById("container");
   var apple = document.createElement("div");
   apple.setAttribute("id", "apple");
   apple.classList.add("apple");
   container.appendChild(apple);
 
-  var direction = 39;
+  var direction;
   renderApple();
 
   block.style.top = 0 + "px";
@@ -14,13 +16,12 @@ window.onload = function () {
 
   setInterval(() => {
     move(direction);
+    rerenderSnakeBody();
   }, 150);
 
   document.addEventListener("keydown", (e) => {
     direction = e.keyCode;
   });
-
-  
 
   function randomIntFromInterval(min, max) {
     // min and max included
@@ -36,6 +37,7 @@ window.onload = function () {
   }
 
   function move(direction) {
+
     var top = block.offsetTop;
     var left = block.offsetLeft;
 
@@ -58,16 +60,24 @@ window.onload = function () {
         break;
     }
     if (left < 0 || left >= 400 || top < 0 || top >= 400) {
-      console.log("gagvekcaa");
     }
-    console.log("top");
-    console.log("left", block.offsetLeft);
 
     if (
       block.offsetLeft === apple.offsetLeft &&
       block.offsetTop === apple.offsetTop
     ) {
       renderApple();
+
+      let square = document.createElement("div");
+      square.classList.add("new-segment");
+      container.appendChild(square);
+      snakeBody.unshift(square);
+    }
+  }
+  function rerenderSnakeBody(){
+    for(let i=0;i<snakeBody.length-1;i++){
+      snakeBody[i].style.top=snakeBody[i+1].style.top;
+      snakeBody[i].style.left=snakeBody[i+1].style.left;
     }
   }
 };
