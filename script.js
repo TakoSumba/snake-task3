@@ -1,12 +1,37 @@
+
+
 var snakeBody;
 var snakeHeadElement;
 var direction;
 var container = document.getElementById("container");
 var apple;
 var game;
+var pauseButton=document.getElementById("pause");
+var playButton=document.getElementById("play");
 
-startGame();
-play();
+
+pauseButton.onclick=function(event){
+  isClicked=false;
+  pauseGame();
+} 
+
+var isClicked=false;
+playButton.onclick=function(event){
+  
+  
+  if(isClicked==true){
+    return
+  }else{
+    isClicked=true;
+  }
+    direction=39;
+    play();
+  
+}
+
+
+setUpGame();
+// play();
 
 document.addEventListener("keydown", (e) => {
   const newDirection = e.keyCode;
@@ -49,7 +74,10 @@ function move(dir) {
       break;
   }
   if (left < 0 || left >= 400 || top < 0 || top >= 400) {
-    // alert('you lost')
+    pauseGame();
+    isClicked=false;
+    setUpGame();
+    
   }
 
   if (
@@ -62,18 +90,20 @@ function move(dir) {
     square.classList.add("new-segment");
     container.appendChild(square);
     snakeBody.unshift(square);
+    
   }
   for (let i = 0; i < snakeBody.length - 1; i++) {
     if (
       snakeBody[i].style.top === snakeBody[snakeBody.length - 1].style.top &&
       snakeBody[i].style.left === snakeBody[snakeBody.length - 1].style.left
     ) {
-      ///////tamashi gavacherot
+      
+    
     }
   }
 }
 
-function startGame() {
+function setUpGame() {
   snakeBody = [];
 
   container.innerHTML = "";
@@ -83,6 +113,7 @@ function startGame() {
   snakeHeadElement.classList.add("block-section");
 
   container.appendChild(snakeHeadElement);
+  
 
   apple = document.createElement("div");
   apple.setAttribute("id", "apple");
