@@ -1,164 +1,177 @@
 import { config } from "./config/config.js";
 
-var snakeBody;
-var snakeHeadElement;
-var direction;
-var container = document.getElementById("container");
-var apple;
-var game;
-var pauseButton = document.getElementById("pause");
-var playButton = document.getElementById("play");
-var isClicked = false;
+class Snake {
+  snakeBody;
+  snakeHeadElement;
+  direction;
+  container;
+  apple;
+  game;
+  isPlaying;
 
-pauseButton.onclick = function (event) {
-  isClicked = false;
-  pauseGame();
-};
-
-playButton.onclick = function (event) {
-  if (isClicked == true) {
-    return;
-  } else {
-    isClicked = true;
-  }
-  direction = 39;
-  play();
-};
-
-setUpGame();
-// play();
-
-document.addEventListener("keydown", (e) => {
-  const newDirection = e.keyCode;
-  if (direction === 37 && newDirection === 39) {
-    return;
-  }
-  if (direction === 39 && newDirection === 37) {
-    return;
-  }
-  if (direction === 38 && newDirection === 40) {
-    return;
-  }
-  if (direction === 40 && newDirection === 38) {
-    return;
+  constructor(containerName) {
+    this.container = document.getElementById(containerName);
+    this.setUpGame();
   }
 
-  direction = newDirection;
-});
+  move() {
+    const dir = this.direction;
+    var top = this.snakeHeadElement.offsetTop;
+    var left = this.snakeHeadElement.offsetLeft;
 
-function move(dir) {
-  var top = snakeHeadElement.offsetTop;
-  var left = snakeHeadElement.offsetLeft;
-
-  switch (dir) {
-    case config.direction.up:
-      top -= config.stepSize;
-      snakeHeadElement.style.top = top + "px";
-      break;
-    case config.direction.down:
-      top += config.stepSize;
-      snakeHeadElement.style.top = top + "px";
-      break;
-    case config.direction.left:
-      left -= config.stepSize;
-      snakeHeadElement.style.left = left + "px";
-      break;
-    case config.direction.right:
-      left += config.stepSize;
-      snakeHeadElement.style.left = left + "px";
-      break;
-  }
-  if (
-    left < 0 ||
-    left >= config.boardSize ||
-    top < 0 ||
-    top >= config.boardSize
-  ) {
-    pauseGame();
-    isClicked = false;
-    setUpGame();
-    alert("Game over");
-  }
-
-  for (let i = 0; i < snakeBody.length - 1; i++) {
+    switch (dir) {
+      case config.direction.up:
+        top -= config.stepSize;
+        this.snakeHeadElement.style.top = top + "px";
+        break;
+      case config.direction.down:
+        top += config.stepSize;
+        this.snakeHeadElement.style.top = top + "px";
+        break;
+      case config.direction.left:
+        left -= config.stepSize;
+        this.snakeHeadElement.style.left = left + "px";
+        break;
+      case config.direction.right:
+        left += config.stepSize;
+        this.snakeHeadElement.style.left = left + "px";
+        break;
+    }
     if (
-      snakeBody[i].style.top === snakeBody[snakeBody.length - 1].style.top &&
-      snakeBody[i].style.left === snakeBody[snakeBody.length - 1].style.left
+      left < 0 ||
+      left >= config.boardSize ||
+      top < 0 ||
+      top >= config.boardSize
     ) {
-      pauseGame();
-      setUpGame();
+      this.pauseGame();
+      this.setUpGame();
       alert("Game over");
+    }
+
+    for (let i = 0; i < this.snakeBody.length - 1; i++) {
+      if (
+        this.snakeBody[i].style.top ===
+          this.snakeBody[this.snakeBody.length - 1].style.top &&
+        this.snakeBody[i].style.left ===
+          this.snakeBody[this.snakeBody.length - 1].style.left
+      ) {
+        this.pauseGame();
+        this.setUpGame();
+        alert("Game over");
+      }
+    }
+
+    if (
+      this.snakeHeadElement.offsetLeft === this.apple.offsetLeft &&
+      this.snakeHeadElement.offsetTop === this.apple.offsetTop
+    ) {
+      this.eat();
+      this.renderApple();
+    }
+  }
+  eat() {
+    let square = document.createElement("div");
+    square.classList.add("body-segment");
+    this.container.appendChild(square);
+    this.snakeBody.unshift(square);
+
+    this.rerenderSnakeBody();
+  }
+
+  setUpGame() {
+    this.snakeBody = [];
+
+    this.direction = 39;
+
+    this.container.innerHTML = "";
+
+    this.snakeHeadElement = document.createElement("div");
+    this.snakeHeadElement.setAttribute("id", "snake-head");
+    this.snakeHeadElement.classList.add("body-segment");
+
+    this.container.appendChild(this.snakeHeadElement);
+
+    this.apple = document.createElement("div");
+    this.apple.setAttribute("id", "apple");
+    this.apple.classList.add("apple");
+    this.container.appendChild(this.apple);
+
+    this.snakeBody.unshift(this.snakeHeadElement);
+
+    this.snakeHeadElement.style.top = 0 + "px";
+    this.snakeHeadElement.style.left = 0 + "px";
+
+    this.renderApple();
+  }
+
+  play() {
+    this.isPlaying = true;
+    this.game = setInterval(() => {
+      this.rerenderSnakeBody();
+      this.move();
+    }, config.speed);
+  }
+
+  rerenderSnakeBody() {
+    for (let i = 0; i < this.snakeBody.length - 1; i++) {
+      this.snakeBody[i].style.top = this.snakeBody[i + 1].style.top;
+      this.snakeBody[i].style.left = this.snakeBody[i + 1].style.left;
     }
   }
 
-  if (
-    snakeHeadElement.offsetLeft === apple.offsetLeft &&
-    snakeHeadElement.offsetTop === apple.offsetTop
-  ) {
-    eat();
-    renderApple();
+  pauseGame() {
+    this.isPlaying = false;
+    clearInterval(this.game);
   }
-}
 
-function eat() {
-  let square = document.createElement("div");
-  square.classList.add("body-segment");  
-  container.appendChild(square);
-  snakeBody.unshift(square);
+  renderApple() {
+    const appleLeft = 20 * randomIntFromInterval(0, 19);
+    const appleTop = 20 * randomIntFromInterval(0, 19);
 
-  rerenderSnakeBody();
-}
-
-function setUpGame() {
-  snakeBody = [];
-
-  container.innerHTML = "";
-
-  snakeHeadElement = document.createElement("div");
-  snakeHeadElement.setAttribute("id", "snake-head");
-  snakeHeadElement.classList.add("body-segment");
-
-  container.appendChild(snakeHeadElement);
-
-  apple = document.createElement("div");
-  apple.setAttribute("id", "apple");
-  apple.classList.add("apple");
-  container.appendChild(apple);
-
-  snakeBody.unshift(snakeHeadElement);
-
-  snakeHeadElement.style.top = 0 + "px";
-  snakeHeadElement.style.left = 0 + "px";
-
-  renderApple();
-}
-
-function play() {
-  game = setInterval(() => {
-    rerenderSnakeBody();
-    move(direction);
-  }, config.speed);
-}
-
-function rerenderSnakeBody() {
-  for (let i = 0; i < snakeBody.length - 1; i++) {
-    snakeBody[i].style.top = snakeBody[i + 1].style.top;
-    snakeBody[i].style.left = snakeBody[i + 1].style.left;
+    this.apple.style.top = appleTop + "px";
+    this.apple.style.left = appleLeft + "px";
   }
-}
 
-function pauseGame() {
-  clearInterval(game);
-}
-function renderApple() {
-  const appleLeft = 20 * randomIntFromInterval(0, 19);
-  const appleTop = 20 * randomIntFromInterval(0, 19);
+  updateDirection(newDirection) {
+    if (this.direction === 37 && newDirection === 39) {
+      return;
+    }
+    if (this.direction === 39 && newDirection === 37) {
+      return;
+    }
+    if (this.direction === 38 && newDirection === 40) {
+      return;
+    }
+    if (this.direction === 40 && newDirection === 38) {
+      return;
+    }
 
-  apple.style.top = appleTop + "px";
-  apple.style.left = appleLeft + "px";
+    this.direction = newDirection;
+  }
 }
 
 function randomIntFromInterval(min, max) {
   // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+const snake = new Snake("container");
+
+var pauseButton = document.getElementById("pause");
+var playButton = document.getElementById("play");
+
+pauseButton.onclick = function (event) {
+  snake.pauseGame();
+};
+
+playButton.onclick = function (event) {
+  if (snake.isPlaying) {
+    return;
+  } else {
+    snake.play();
+  }
+};
+
+document.addEventListener("keydown", (e) => {
+  snake.updateDirection(e.keyCode);
+});
