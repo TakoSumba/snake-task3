@@ -1,4 +1,4 @@
-
+import { config } from "./config/config.js";
 
 var snakeBody;
 var snakeHeadElement;
@@ -6,29 +6,24 @@ var direction;
 var container = document.getElementById("container");
 var apple;
 var game;
-var pauseButton=document.getElementById("pause");
-var playButton=document.getElementById("play");
+var pauseButton = document.getElementById("pause");
+var playButton = document.getElementById("play");
+var isClicked = false;
 
-
-pauseButton.onclick=function(event){
-  isClicked=false;
+pauseButton.onclick = function (event) {
+  isClicked = false;
   pauseGame();
-} 
+};
 
-var isClicked=false;
-playButton.onclick=function(event){
-  
-  
-  if(isClicked==true){
-    return
-  }else{
-    isClicked=true;
+playButton.onclick = function (event) {
+  if (isClicked == true) {
+    return;
+  } else {
+    isClicked = true;
   }
-    direction=39;
-    play();
-  
-}
-
+  direction = 39;
+  play();
+};
 
 setUpGame();
 // play();
@@ -56,28 +51,33 @@ function move(dir) {
   var left = snakeHeadElement.offsetLeft;
 
   switch (dir) {
-    case 38:
-      top -= 20;
+    case config.direction.up:
+      top -= config.stepSize;
       snakeHeadElement.style.top = top + "px";
       break;
-    case 40:
-      top += 20;
+    case config.direction.down:
+      top += config.stepSize;
       snakeHeadElement.style.top = top + "px";
       break;
-    case 37:
-      left -= 20;
+    case config.direction.left:
+      left -= config.stepSize;
       snakeHeadElement.style.left = left + "px";
       break;
-    case 39:
-      left += 20;
+    case config.direction.right:
+      left += config.stepSize;
       snakeHeadElement.style.left = left + "px";
       break;
   }
-  if (left < 0 || left >= 400 || top < 0 || top >= 400) {
+  if (
+    left < 0 ||
+    left >= config.boardSize ||
+    top < 0 ||
+    top >= config.boardSize
+  ) {
     pauseGame();
-    isClicked=false;
+    isClicked = false;
     setUpGame();
-    
+    alert("Game over");
   }
 
   if (
@@ -87,18 +87,18 @@ function move(dir) {
     renderApple();
 
     let square = document.createElement("div");
-    square.classList.add("new-segment");
+    square.classList.add("body-segment");
     container.appendChild(square);
     snakeBody.unshift(square);
-    
   }
   for (let i = 0; i < snakeBody.length - 1; i++) {
     if (
       snakeBody[i].style.top === snakeBody[snakeBody.length - 1].style.top &&
       snakeBody[i].style.left === snakeBody[snakeBody.length - 1].style.left
     ) {
-      
-    
+      pauseGame();
+      setUpGame();
+      alert("Game over");
     }
   }
 }
@@ -109,11 +109,10 @@ function setUpGame() {
   container.innerHTML = "";
 
   snakeHeadElement = document.createElement("div");
-  snakeHeadElement.setAttribute("id", "block");
-  snakeHeadElement.classList.add("block-section");
+  snakeHeadElement.setAttribute("id", "snake-head");
+  snakeHeadElement.classList.add("body-segment");
 
   container.appendChild(snakeHeadElement);
-  
 
   apple = document.createElement("div");
   apple.setAttribute("id", "apple");
@@ -132,7 +131,7 @@ function play() {
   game = setInterval(() => {
     move(direction);
     rerenderSnakeBody();
-  }, 150);
+  }, config.speed);
 }
 
 function rerenderSnakeBody() {
