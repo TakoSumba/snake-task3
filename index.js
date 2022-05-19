@@ -1,4 +1,4 @@
-import {Snake} from "./snake.js"
+import { Snake } from "./snake.js";
 
 const snake = new Snake("container");
 

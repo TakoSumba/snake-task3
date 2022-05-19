@@ -98,7 +98,7 @@ export class Snake {
   setUpGame() {
     this.snakeBody = [];
 
-    this.direction = 39;
+    this.direction = config.direction.right;
 
     this.container.innerHTML = "";
 
@@ -148,8 +148,8 @@ export class Snake {
     let isOnBody = false;
     for (let i = 0; i < this.snakeBody.length; i++) {
       if (
-        this.snakeBody[i].style.offsetTop === appleTop &&
-        this.snakeBody[i].style.offsetLeft === appleLeft
+        this.snakeBody[i].offsetTop === appleTop &&
+        this.snakeBody[i].offsetLeft === appleLeft
       ) {
         isOnBody = true;
         break;
@@ -165,16 +165,28 @@ export class Snake {
   }
 
   updateDirection(newDirection) {
-    if (this.direction === 37 && newDirection === 39) {
+    if (
+      this.direction === config.direction.left &&
+      newDirection === config.direction.right
+    ) {
       return;
     }
-    if (this.direction === 39 && newDirection === 37) {
+    if (
+      this.direction === config.direction.right &&
+      newDirection === config.direction.left
+    ) {
       return;
     }
-    if (this.direction === 38 && newDirection === 40) {
+    if (
+      this.direction === config.direction.up &&
+      newDirection === config.direction.down
+    ) {
       return;
     }
-    if (this.direction === 40 && newDirection === 38) {
+    if (
+      this.direction === config.direction.down &&
+      newDirection === config.direction.up
+    ) {
       return;
     }
 
@@ -183,6 +195,5 @@ export class Snake {
 }
 
 function randomIntFromInterval(min, max) {
-  // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 }

@@ -10,15 +10,6 @@ body {
   border: 2px solid black;
 }
 
-.block-section {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  left: 0px;
-  top: 0px;
-  position: absolute;
-  background-color: red;
-}
 
 .apple {
   width: 20px;
