@@ -80,17 +80,6 @@ function move(dir) {
     alert("Game over");
   }
 
-  if (
-    snakeHeadElement.offsetLeft === apple.offsetLeft &&
-    snakeHeadElement.offsetTop === apple.offsetTop
-  ) {
-    renderApple();
-
-    let square = document.createElement("div");
-    square.classList.add("body-segment");
-    container.appendChild(square);
-    snakeBody.unshift(square);
-  }
   for (let i = 0; i < snakeBody.length - 1; i++) {
     if (
       snakeBody[i].style.top === snakeBody[snakeBody.length - 1].style.top &&
@@ -101,6 +90,23 @@ function move(dir) {
       alert("Game over");
     }
   }
+
+  if (
+    snakeHeadElement.offsetLeft === apple.offsetLeft &&
+    snakeHeadElement.offsetTop === apple.offsetTop
+  ) {
+    eat();
+    renderApple();
+  }
+}
+
+function eat() {
+  let square = document.createElement("div");
+  square.classList.add("body-segment");  
+  container.appendChild(square);
+  snakeBody.unshift(square);
+
+  rerenderSnakeBody();
 }
 
 function setUpGame() {
@@ -129,8 +135,8 @@ function setUpGame() {
 
 function play() {
   game = setInterval(() => {
-    move(direction);
     rerenderSnakeBody();
+    move(direction);
   }, config.speed);
 }
 

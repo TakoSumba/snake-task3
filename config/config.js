@@ -8,5 +8,5 @@ export const config = {
   },
 
   stepSize: 20,
-  boardSize:400
+  boardSize: 400,
 };
