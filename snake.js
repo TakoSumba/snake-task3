@@ -37,17 +37,13 @@ export class Snake {
         this.snakeHeadElement.style.left = left + "px";
         break;
     }
-    if (
-      left < 0 ||
-      left >= config.boardSize ||
-      top < 0 ||
-      top >= config.boardSize
-    ) {
-      this.pauseGame();
-      this.setUpGame();
-      alert("Game over");
-    }
 
+    this.checkBorders();
+    this.checkEatItself();
+    this.checkEatApple();
+  }
+
+  checkEatItself() {
     for (let i = 0; i < this.snakeBody.length - 1; i++) {
       if (
         this.snakeBody[i].style.top ===
@@ -58,9 +54,29 @@ export class Snake {
         this.pauseGame();
         this.setUpGame();
         alert("Game over");
+        return;
       }
     }
+  }
 
+  checkBorders() {
+    var top = this.snakeHeadElement.offsetTop;
+    var left = this.snakeHeadElement.offsetLeft;
+
+    if (
+      left < 0 ||
+      left >= config.boardSize ||
+      top < 0 ||
+      top >= config.boardSize
+    ) {
+      this.pauseGame();
+      this.setUpGame();
+      alert("Game over");
+      return;
+    }
+  }
+
+  checkEatApple() {
     if (
       this.snakeHeadElement.offsetLeft === this.apple.offsetLeft &&
       this.snakeHeadElement.offsetTop === this.apple.offsetTop
@@ -69,6 +85,7 @@ export class Snake {
       this.renderApple();
     }
   }
+
   eat() {
     let square = document.createElement("div");
     square.classList.add("body-segment");
@@ -154,4 +171,3 @@ function randomIntFromInterval(min, max) {
   // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
-
