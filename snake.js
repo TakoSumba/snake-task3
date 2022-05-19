@@ -145,8 +145,23 @@ export class Snake {
     const appleLeft = 20 * randomIntFromInterval(0, 19);
     const appleTop = 20 * randomIntFromInterval(0, 19);
 
-    this.apple.style.top = appleTop + "px";
-    this.apple.style.left = appleLeft + "px";
+    let isOnBody = false;
+    for (let i = 0; i < this.snakeBody.length; i++) {
+      if (
+        this.snakeBody[i].style.offsetTop === appleTop &&
+        this.snakeBody[i].style.offsetLeft === appleLeft
+      ) {
+        isOnBody = true;
+        break;
+      }
+    }
+
+    if (isOnBody) {
+      this.renderApple();
+    } else {
+      this.apple.style.top = appleTop + "px";
+      this.apple.style.left = appleLeft + "px";
+    }
   }
 
   updateDirection(newDirection) {
