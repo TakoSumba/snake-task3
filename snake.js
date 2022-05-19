@@ -46,10 +46,10 @@ export class Snake {
   checkEatItself() {
     for (let i = 0; i < this.snakeBody.length - 1; i++) {
       if (
-        this.snakeBody[i].style.top ===
-          this.snakeBody[this.snakeBody.length - 1].style.top &&
-        this.snakeBody[i].style.left ===
-          this.snakeBody[this.snakeBody.length - 1].style.left
+        this.snakeBody[i].offsetTop  ===
+          this.snakeBody[this.snakeBody.length - 1].offsetTop &&
+        this.snakeBody[i].offsetLeft ===
+          this.snakeBody[this.snakeBody.length - 1].offsetLeft
       ) {
         this.pauseGame();
         this.setUpGame();
