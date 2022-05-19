@@ -25,6 +25,7 @@ body {
   height: 20px;
   background-color: green;
   position: absolute;
+  border-radius: 50%;
 }
 
 .body-segment {
@@ -51,4 +52,7 @@ body {
 
 .buttons {
   margin-bottom: 10px;
+}
+#snake-head{
+  border-radius: 5px ;
 }
