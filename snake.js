@@ -11,10 +11,10 @@ export class Snake {
 
   constructor(containerName) {
     this.container = document.getElementById(containerName);
-    this.setUpGame();
+    this._setUpGame();
   }
 
-  move() {
+  _move() {
     const dir = this.direction;
     var top = this.snakeHeadElement.offsetTop;
     var left = this.snakeHeadElement.offsetLeft;
@@ -38,12 +38,12 @@ export class Snake {
         break;
     }
 
-    this.checkBorders();
-    this.checkEatItself();
-    this.checkEatApple();
+    this._checkBorders();
+    this._checkEatItself();
+    this._checkEatApple();
   }
 
-  checkEatItself() {
+  _checkEatItself() {
     for (let i = 0; i < this.snakeBody.length - 1; i++) {
       if (
         this.snakeBody[i].offsetTop  ===
@@ -52,14 +52,14 @@ export class Snake {
           this.snakeBody[this.snakeBody.length - 1].offsetLeft
       ) {
         this.pauseGame();
-        this.setUpGame();
+        this._setUpGame();
         alert("Game over");
         return;
       }
     }
   }
 
-  checkBorders() {
+  _checkBorders() {
     var top = this.snakeHeadElement.offsetTop;
     var left = this.snakeHeadElement.offsetLeft;
 
@@ -70,32 +70,32 @@ export class Snake {
       top >= config.boardSize
     ) {
       this.pauseGame();
-      this.setUpGame();
+      this._setUpGame();
       alert("Game over");
       return;
     }
   }
 
-  checkEatApple() {
+  _checkEatApple() {
     if (
       this.snakeHeadElement.offsetLeft === this.apple.offsetLeft &&
       this.snakeHeadElement.offsetTop === this.apple.offsetTop
     ) {
-      this.eat();
-      this.renderApple();
+      this._eat();
+      this._renderApple();
     }
   }
 
-  eat() {
+  _eat() {
     let square = document.createElement("div");
     square.classList.add("body-segment");
     this.container.appendChild(square);
     this.snakeBody.unshift(square);
 
-    this.rerenderSnakeBody();
+    this._rerenderSnakeBody();
   }
 
-  setUpGame() {
+  _setUpGame() {
     this.snakeBody = [];
 
     this.direction = config.direction.right;
@@ -118,18 +118,18 @@ export class Snake {
     this.snakeHeadElement.style.top = 0 + "px";
     this.snakeHeadElement.style.left = 0 + "px";
 
-    this.renderApple();
+    this._renderApple();
   }
 
   play() {
     this.isPlaying = true;
     this.game = setInterval(() => {
-      this.rerenderSnakeBody();
-      this.move();
+      this._rerenderSnakeBody();
+      this._move();
     }, config.speed);
   }
 
-  rerenderSnakeBody() {
+  _rerenderSnakeBody() {
     for (let i = 0; i < this.snakeBody.length - 1; i++) {
       this.snakeBody[i].style.top = this.snakeBody[i + 1].style.top;
       this.snakeBody[i].style.left = this.snakeBody[i + 1].style.left;
@@ -141,7 +141,7 @@ export class Snake {
     clearInterval(this.game);
   }
 
-  renderApple() {
+  _renderApple() {
     const appleLeft = 20 * randomIntFromInterval(0, 19);
     const appleTop = 20 * randomIntFromInterval(0, 19);
 
@@ -157,7 +157,7 @@ export class Snake {
     }
 
     if (isOnBody) {
-      this.renderApple();
+      this._renderApple();
     } else {
       this.apple.style.top = appleTop + "px";
       this.apple.style.left = appleLeft + "px";
